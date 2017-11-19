@@ -30,7 +30,6 @@ public class EndcubeRotate : MonoBehaviour {
         fYpos = tCurrentEndCube.position.y;
         fZpos = tCurrentEndCube.position.z;
 
-        Turn = true;
     }
 	
 	// Update is called once per frame
@@ -46,36 +45,62 @@ public class EndcubeRotate : MonoBehaviour {
             rbMyPlayer = goMyCurrentPlayer.GetComponent<Rigidbody>();
             tMyPlayerSetup = goMyCurrentPlayer.transform.parent.transform;
 
+            //Set Constraints
+            rbMyPlayer.constraints = ~rbMyPlayer.constraints & ~RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
 
-            if (fXpos == -100)
+            //Fix Player Position
+            goMyCurrentPlayer.transform.position = tRotation.position;
+
+            if (fXpos == -100 & fZpos==0)
             {
-                if (Turn)
+                //Rotate Cam
+                if ((rbMyPlayer.constraints & RigidbodyConstraints.FreezePositionX) != 0)
                 {
-                    //Set Constraints
-                    rbMyPlayer.constraints = RigidbodyConstraints.FreezePositionX & ~RigidbodyConstraints.FreezePositionY & ~RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-                    //Flip Bool
-                    Turn = !Turn;
-                    //Fix Player Position
-                    goMyCurrentPlayer.transform.position = tRotation.position;
-
-
-                    //scCameraScript.enabled = false;
-                    //Rotate Cam
                     tMyPlayerSetup.RotateAround(tRotation.position, Vector3.up, 90);
-                    //scCameraScript.OffsetReset();
-                    //scCameraScript.enabled = true;
                 }
                 else {
-                    rbMyPlayer.constraints = ~RigidbodyConstraints.FreezePositionX & ~RigidbodyConstraints.FreezePositionY & RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-                    Turn = !Turn;
-                    goMyCurrentPlayer.transform.position = tRotation.position;
-
-                    //scCameraScript.enabled = false;
                     tMyPlayerSetup.RotateAround(tRotation.position, Vector3.up, -90);
-                    //scCameraScript.OffsetReset();
-                    //scCameraScript.enabled = true;
                 }
-                
+
+            }
+            else if (fXpos == 100 & fZpos == 0)
+            {
+                //Rotate Cam
+                if ((rbMyPlayer.constraints & RigidbodyConstraints.FreezePositionZ) != 0)
+                {
+                    tMyPlayerSetup.RotateAround(tRotation.position, Vector3.up, 90);
+                }
+                else
+                {
+                    tMyPlayerSetup.RotateAround(tRotation.position, Vector3.up, -90);
+                }
+
+            }
+            else if (fXpos == -100 & fZpos == 100)
+            {
+                //Rotate Cam
+                if ((rbMyPlayer.constraints & RigidbodyConstraints.FreezePositionZ) != 0)
+                {
+                    tMyPlayerSetup.RotateAround(tRotation.position, Vector3.up, 90);
+                }
+                else
+                {
+                    tMyPlayerSetup.RotateAround(tRotation.position, Vector3.up, -90);
+                }
+
+            }
+            else if (fXpos == 100 & fZpos == 100)
+            {
+                //Rotate Cam
+                if ((rbMyPlayer.constraints & RigidbodyConstraints.FreezePositionX) != 0)
+                {
+                    tMyPlayerSetup.RotateAround(tRotation.position, Vector3.up, 90);
+                }
+                else
+                {
+                    tMyPlayerSetup.RotateAround(tRotation.position, Vector3.up, -90);
+                }
+
             }
 
         }
